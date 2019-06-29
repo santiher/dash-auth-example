@@ -30,6 +30,18 @@ The json web token cookie from the user is assumed to have an
 `allowed_resources` item with a list of allowed pages. If the special page
 `_all_` is contained, the user is allowed full access to the dashboard.
 
+## Users
+
+Two users are created on the examples:
+
+| username | password | pages     |
+| -------- | -------- | --------- |
+| mica     | 1234     | all       |
+| mike     | 123456   | marketing |
+
+The users themselves are hardcoded, this example is not intended to be a users
+and passwords example.
+
 ## Architecture
 
 An [Nginx](https://www.nginx.com/) serves requests before they get to the dash
