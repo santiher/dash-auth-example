@@ -1,0 +1,4 @@
+dash==0.43.0
+dash-daq==0.1.5
+gunicorn==19.9.0
+pyjwt==1.7.1

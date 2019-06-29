@@ -1,0 +1,16 @@
+FROM nginx:1.15-alpine
+
+# system dependency
+RUN apk --no-cache --update add openssl
+# Self signed ssl certificate directory to use https only
+RUN mkdir /certificate
+# Create key and csr
+RUN openssl req \
+    -x509 -sha256 -newkey rsa:2048 -nodes \
+    -keyout /certificate/server.key -days 3650 -out /certificate/server.crt \
+    -subj "/C=US/ST=New York/L=New York/O=Organization/OU=Tech Department/CN=ExampleDashboard"
+# Validate
+RUN openssl x509 -text -noout -in /certificate/server.crt
+RUN chown -R nginx:nginx /certificate
+# Copy config
+COPY docker/app.conf /etc/nginx/conf.d/app.conf

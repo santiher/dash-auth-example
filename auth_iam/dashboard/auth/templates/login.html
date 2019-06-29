@@ -1,0 +1,59 @@
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+  function sign_in() {
+    var msg = document.getElementById('msg');
+    var user = document.getElementById('username').value;
+    var pass = document.getElementById('password').value;
+    msg.style.display = "none";
+    msg.innerHTML = ""
+    if (user == "" || pass == "") {
+        return
+    }
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("GET", "auth", true);
+    xhttp.setRequestHeader("Content-Type", "application/json");
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        window.location.href = window.location.origin + this.responseText;
+      }
+      else if (this.readyState == 4 && this.status == 401) {
+        msg.innerHTML = "Username or password invalid"
+        msg.style.display = null;
+      }
+      else if (this.readyState == 4 && this.status == 400) {
+        msg.innerHTML = "Bad request"
+        msg.style.display = null;
+      }
+      else {
+        console.log("State: " + this.readState + ". Status: " + this.status)
+      }
+    };
+    xhttp.setRequestHeader(
+        "Authorization",
+        "DASHBOARD-AUTH username=" + user + "/password=" + pass);
+    xhttp.send();
+  }
+</script>
+</head>
+<body>
+
+<div>
+  <div>
+    <form onsubmit="sign_in(); return false;">
+    <div id="msg" style="display: none">Username or password invalid</div>
+    <div>
+      <label for="username"><b>Username</b></label>
+      <input id="username" type="text" placeholder="Enter Username" required>
+      <label for="password"><b>Password</b></label>
+      <input id="password" type="password" placeholder="Enter Password" required>
+      <button type="submit">Login</button>
+    </div>
+    </form>
+  </div>
+</div>
+
+</body>
+</html>

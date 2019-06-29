@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+
+  dashboard:
+    image: dashboard/dashboard_auth_iam
+    restart: always
+    user: dashuser
+    working_dir: /dashuser/dashboard
+    build:
+        context: ../
+        dockerfile: docker/Dockerfile.dashboard
+    networks:
+        - dashnet
+    logging:
+        driver: "json-file"
+        options:
+            max-file: "10"
+            max-size: "10m"
+    command: /bin/sh -c "
+        gunicorn -b 0.0.0.0:8080 --workers 2 --reload dashboard.app:server"
+
+  nginx:
+    image: dashboard/nginx_auth_iam
+    restart: always
+    ports:
+        - "80:80"
+        - "443:443"
+    build:
+        context: ../
+        dockerfile: docker/Dockerfile.nginx
+    links:
+        - dashboard
+    depends_on:
+        - dashboard
+    networks:
+        - dashnet
+    logging:
+        driver: "json-file"
+        options:
+            max-file: "10"
+            max-size: "10m"
+    command: nginx -g "daemon off;"
+
+networks:
+  dashnet:
